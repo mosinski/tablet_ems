@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css?family=Syncopate|Unica+One');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+@import url(https://fonts.googleapis.com/css?family=Saira&display=swap);
+@import url(https://fonts.googleapis.com/css?family=Spectral&display=swap);
+
+
+body, html { 
+  overflow-y: hidden;
+  background-color: transparent !important;
+  display: none;
+  font-family:Saira,serif;
+}
+
+.right-color { 
+  position: absolute;
+  top: 0px;
+  left: 30px;
+  background: rgb(40, 40, 40);
+  height: 190px;
+  width: 500px;
+  border: 1px solid black;
+  border-radius: 10px 10px 10px 10px;
+  z-index:5;
+}
+
+.spacer {
+  height: 30%;
+}
+
+.spacer2 {
+  display: absolute;
+  top: -40px;
+  left: -150px;
+  width: 900px;
+  height:400px;
+  overflow-y: auto;
+  word-break: break-word;
+}
+
+table {
+  table-layout: fixed;
+}
+
+.btn-group {
+  font-family:Saira,serif;
+  background-image: url(../img/tablet.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: absolute;
+  margin-left: 10%;
+  margin-top: 5%;
+  padding: 52px 92px;
+  display: none;
+  color: white;
+  height: 80%;
+  width: 80%;
+  z-index: 2;
+}
+
+.btn-group .container-fluid {
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-image: url(../img/bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.navbar {
+  max-height: 50px;
+}
+
+.navbar button {
+  margin-top: -30px;
+}
+
+.navbar-brand {
+  margin-top: -30px;
+}
+
+.navbar-brand img {
+  height: 100px;
+}
+
+.bckgrnd {
+  background: rgb(60, 60, 60);
+  position: absolute;
+  border-radius: 50px 5px 5px 5px;
+}
+
+.btn-main {
+  background-color: rgba(108, 117, 125,.3);
+}
+
+#close {
+  display: inline-block;
+  float: right;
+  padding: 5px;
+  padding-right: 10px;
+  color: rgb(255, 0, 0);
+}
+
+#rootMenu .btn-lg {
+  border-width:  10px;
+}
+
+div.police_actions, div.inv, div.voice {
+  display: none;
+}
+
+.custom {
+  width: 150px !important;
+}
+
+#treatmentForm {
+  background-color: #f2f2f2;
+  font-family:Spectral,sans-serif;
+  color: #000000;
+}

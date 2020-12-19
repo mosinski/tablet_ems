@@ -1,0 +1,186 @@
+<html lang=pl>
+  <head>
+    <meta charset=utf-8>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+
+    <link href=css/style.css rel=stylesheet>
+    <link href=css/bootstrap.min.css rel=stylesheet>
+    <link href=css/all.min.css rel=stylesheet>
+  </head>
+  <body>
+    <div class="btn-group">
+      <div class="container-fluid">
+        <div class="row">
+          <nav class="navbar navbar-light bg-light mt-5 py-0 px-5 w-100">
+            <a class="navbar-brand" href="#">
+              <img src="img/logo.png">
+            </a>
+            <div>
+            <button class="btn btn-outline-secondary" id="showTreatments" type="button">
+              <i class="fas fa-users"></i>
+              Zabiegi
+            </button>
+            <button class="btn btn-outline-secondary" id="showPatients" type="button">
+              <i class="fas fa-user-injured"></i>
+              Pacjenci
+            </button>
+            <button class="btn btn-outline-secondary" id="showMedics" type="button">
+              <i class="fas fa-user-md"></i>
+              Lekarze
+            </button>
+            </div>
+            <button class="btn btn-outline-secondary" id="exit_gui" type="button">
+              <i class="fas fa-sign-out-alt"></i>
+              Zamknij
+            </button>
+          </nav>
+        </div>
+        <div class="row justify-content-md-center py-5" id="rootMenu">
+          <div class="col-3 mt-5">
+            <button class="btn btn-primary btn-lg btn-block mt-5 border border-danger" id="newTreatment">
+              <div class="text-center m-3">
+                <i class="fas fa-procedures fa-7x"></i>
+              </div>
+              <h1 class="text-center m-3">
+                Nowy<br>Zabieg
+              </h1>
+            </button>
+          </div>
+          <div class="col-3 mt-5">
+            <button class="btn btn-primary btn-lg btn-block mt-5 border border-danger" id="newExamination">
+              <div class="text-center m-3">
+                <i class="fas fa-notes-medical fa-7x"></i>
+              </div>
+              <h1 class="text-center m-3">
+                Nowe<br>Badanie
+              </h1>
+            </button>
+          </div>
+        </div>
+        <div id="patients" style="display:none">
+          <div class="row justify-content-md-center py-5">
+            <div class="col-4">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button class="btn btn-outline-secondary" type="button">
+                    <i class="fas fa-podcast"></i>
+                  </button>
+                </div>
+                <input type="text" class="form-control" placeholder="wyszukaj: Pacjent, Lekarz, Operacja">
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-md-center">
+            <div class="col-md-12">
+              <div class="table-responsive">
+                <table class="table table-hover table-striped text-dark">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">Pacjent</th>
+                      <th scope="col">Lekarz</th>
+                      <th scope="col">Operacja</th>
+                      <th scope="col">Faktura</th>
+                      <th scope="col">Rekonwalescencja</th>
+                      <th scope="col">Data</th>
+                    </tr>
+                  </thead>
+                  <tbody id="patientsList">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="treatmentForm" style="display:none">
+          <div class="row justify-content-md-center py-5">
+            <form>
+              <div class="form-group">
+                <label for="patient">Pacjent</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary" type="button">
+                      <i class="fas fa-podcast"></i>
+                    </button>
+                  </div>
+                  <input type="text" class="form-control" id="patient" placeholder="Imie i Nazwisko" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="details">Opis</label>
+                <textarea class="form-control" id="details" rows="5" required></textarea>
+              </div>
+              <div class="form-group">
+                <label>Powrot do zdrowia</label>
+                <input type="datetime-local" id="recovery" name="recovery" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label for="price">Kwota Faktury</label>
+                <input type="text" class="form-control" id="price" placeholder="0.0" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Zapisz</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src=nui://game/ui/jquery.js></script>
+  </body>
+  <script type="text/javascript">
+    $(function() {
+      window.addEventListener('message', function(event) {
+      	if(event.data.type == "open"){
+      	  $('.btn-group').css('display', 'block')
+      	  $('body').css('display', 'block')
+      	  $('html').css('display', 'block')
+      	  $('#menujail').hide();
+      	  $('#menukartoteka').hide();
+      	  $('#menufaktura').hide();
+      	} else if (event.data.type == "close"){
+      	  $('.btn-group').css('display', 'none')
+      	  $('body').css('display', 'none')
+      	  $('html').css('display', 'none')
+      	  $('#mySidenav').css('width', '0')
+      	}
+
+      	if(event.data.type == "getTreatments") {
+          event.data.treatments.forEach(function(entry) {
+            var dateOpts = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+            $("#patientsList").append("<tr><td>" + entry.patient + "</td><td>" + entry.medic + "</td><td>" + entry.operations + "</td><td>" + entry.fee + "</td><td>" + new Date(entry.recoveryDate).toLocaleDateString('pl', dateOpts) + "</td><td>" + new Date(entry.date).toLocaleDateString('pl', dateOpts) + "</td></tr>");
+          });
+      	}
+      });
+    });
+
+    $("#exit_gui").click(function(){
+      $('.btn-group').css('display', 'none')
+      $.post('http://tablet_ems/NUIFocusOff', JSON.stringify({}));
+    });
+
+    $("#sendfaktura").click(function(){
+      $.post('http://tablet_ems/faktura', JSON.stringify({fakturareason: $("#faktura_reason").val(), fakturaamount: $("#faktura_amount").val()}));
+      $('.btn-group').css('display', 'none')
+      $.post('http://tablet_medyk/NUIFocusOff', JSON.stringify({}));
+    });
+
+    document.onkeyup = function (data) {
+      if (data.which == 27) {
+        $('.btn-group').css('display', 'none')
+    	$.post('http://tablet_ems/NUIFocusOff', JSON.stringify({}));
+      }
+    };
+
+    $("#showTreatments").click(function() {
+      $('#rootMenu').css('display', 'none');
+      $('#patients').css('display', 'block');
+      $.post('http://tablet_ems/getTreatments');
+    });
+
+    $("#newTreatment").click(function() {
+      $('#rootMenu').css('display', 'none');
+      $('#treatmentForm').css('display', 'block');
+    });
+  </script>
+</html>
+
