@@ -75,11 +75,6 @@ body, html {
   width: 150px !important;
 }
 
-#treatmentForm {
-  font-family:Spectral,sans-serif;
-  color: #000000;
-}
-
 #app {
   background-color: #f2f2f2;
   -webkit-transition: background-color 1000ms linear;

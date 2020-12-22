@@ -50,7 +50,7 @@ function newTreatment() {
   var innerHTML = `
     <div class="col">
       <div class="row justify-content-center py-5">
-        <form id="treatmentForm" class="text-dark" action="#" method="post" onsubmit="createTreatment()">
+        <form id="treatmentForm" class="text-dark" onsubmit="event.preventDefault(); createTreatment()">
           <div class="form-group">
             <label for="patient">Pacjent</label>
             <div class="input-group">
@@ -59,20 +59,20 @@ function newTreatment() {
                   <i class="fas fa-podcast"></i>
                 </button>
               </div>
-              <input type="text" class="form-control" id="patient" placeholder="Imie i Nazwisko" required>
+              <input type="text" class="form-control" name="patient" placeholder="Imie i Nazwisko" required>
             </div>
           </div>
           <div class="form-group">
             <label for="details">Opis</label>
-            <textarea class="form-control" id="details" rows="5" required></textarea>
+            <textarea class="form-control" name="details" rows="5" required></textarea>
           </div>
           <div class="form-group">
             <label>Powrot do zdrowia</label>
-            <input type="datetime-local" id="recovery" name="recovery" class="form-control" required>
+            <input type="datetime-local" name="recovery" class="form-control" required>
           </div>
           <div class="form-group">
             <label for="price">Kwota Faktury</label>
-            <input type="text" class="form-control" id="price" placeholder="0.0" required>
+            <input type="text" class="form-control" name="price" placeholder="0.0" required>
           </div>
           <button type="submit" class="btn btn-primary">${window.t['save']}</button>
         </form>
@@ -83,6 +83,6 @@ function newTreatment() {
 }
 
 function createTreatment() {
-  const data = $("#treatmentForm").serializeArray().reduce((obj, item) => ({ ...obj, ...{ [item.name]: item.value } }), {});
+  var data = window.jQuery('#treatmentForm').serializeArray().reduce((obj, item) => ({ ...obj, ...{ [item.name]: item.value } }), {});
   $.post('http://tablet_ems/createTreatment', JSON.stringify(data));
 }

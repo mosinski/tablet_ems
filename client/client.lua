@@ -75,12 +75,12 @@ RegisterNUICallback('NUIFocusOff', function()
   PoliceGUI = false
 end)
 
-RegisterNUICallback('getTreatments', function()
-  TriggerServerEvent("tablet_ems:getTreatments");
+RegisterNUICallback("getTreatments", function()
+  TriggerServerEvent("tablet_ems:getTreatments")
 end)
 
-RegisterNUICallback('createTreatments', function(data)
-  TriggerServerEvent("tablet_ems:addTreatment", player, operations, fee, recovery);
+RegisterNUICallback("createTreatment", function(data)
+  TriggerServerEvent("tablet_ems:addTreatment", data['patient'], data['details'], data['price'], data['recovery'])
 end)
 
 

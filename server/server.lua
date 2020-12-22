@@ -89,25 +89,23 @@ ESX.RegisterServerCallback('tablet_ems:getKartoteka', function(source, cb)
 end)
 
 RegisterNetEvent('tablet_ems:addTreatment')
-AddEventHandler('tablet_ems:addTreatment', function(player, operations, fee, recovery)
+AddEventHandler('tablet_ems:addTreatment', function(userIdentifier, details, price, recovery)
   local _source = source
   local sourceXPlayer = ESX.GetPlayerFromId(_source)
-  local targetXPlayer = ESX.GetPlayerFromId(player)
-  local userIdentifier = targetXPlayer.getIdentifier()
   local medicIdentifier = sourceXPlayer.getIdentifier()
-  local recoveryDate = os.date('%Y-%m-%d %H:%M:%S', os.time() + recovery * 60)
+  --local recoveryDate = os.date('%Y-%m-%d %H:%M:%S', os.time() + 10 * 60)
 
-  MySQL.Async.execute("INSERT INTO ems_user_treatments (userId,medicId,operations,fee,recoveryDate) VALUES (@userId,@medicId,@operations,@fee,@recoveryDate)",{
+  MySQL.Async.execute('INSERT INTO `ems_user_treatments` (`userId`, `medicId`, `operations`, `fee`, `recoveryDate`) VALUES (@userId, @medicId, @operations, @fee, @recoveryDate)',{
     ['@userId'] = userIdentifier,
     ['@medicId'] = medicIdentifier,
-    ['@operations'] = operations,
-    ['@fee'] = fee,
-    ['@recoveryDate'] = recoveryDate
+    ['@operations'] = details,
+    ['@fee'] = price,
+	['@recoveryDate'] = recovery
   })
 end)
 
 RegisterNetEvent('tablet_ems:getTreatments')
-AddEventHandler('tablet_ems:getTreatments', function(cb)
+AddEventHandler('tablet_ems:getTreatments', function()
   local results = MySQL.Sync.fetchAll("SELECT patients.firstname AS patientFirstName, patients.lastname AS patientLastName, medics.firstname AS medicFirstName, medics.lastname AS medicLastName, userId, medicId, operations, fee, recoveryDate, DATE FROM ems_user_treatments LEFT JOIN users AS patients ON patients.identifier = ems_user_treatments.userId INNER JOIN users AS medics ON medics.identifier = ems_user_treatments.medicId ORDER BY DATE DESC LIMIT 10")
 
   if results ~= nil then
@@ -131,9 +129,8 @@ end)
 
 
 function GetCharacterName(source)
-	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
-	{
-		['@identifier'] = GetPlayerIdentifiers(source)[1]
+	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',{
+	  ['@identifier'] = GetPlayerIdentifiers(source)[1]
 	})
 
 	if result[1] ~= nil and result[1].firstname ~= nil and result[1].lastname ~= nil then
@@ -144,9 +141,8 @@ function GetCharacterName(source)
 end
 
 function GetImie(source)
-	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
-	{
-		['@identifier'] = GetPlayerIdentifiers(source)[1]
+	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
+	  ['@identifier'] = GetPlayerIdentifiers(source)[1]
 	})
 
 	if result[1] ~= nil and result[1].firstname ~= nil then
@@ -157,9 +153,8 @@ function GetImie(source)
 end
 
 function GetNazwisko(source)
-	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',
-	{
-		['@identifier'] = GetPlayerIdentifiers(source)[1]
+	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',{
+	  ['@identifier'] = GetPlayerIdentifiers(source)[1]
 	})
 
 	if result[1] ~= nil and result[1].lastname ~= nil then
