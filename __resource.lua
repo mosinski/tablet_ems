@@ -39,5 +39,10 @@ files({
   'client/html/fonts/fa-solid-900.woff2',
   'client/html/img/tablet.png',
   'client/html/img/logo.png',
-  'client/html/img/bg.jpg'
+  'client/html/img/bg.jpg',
+  'client/html/locales/pl.json',
+  'client/html/js/nav.js',
+  'client/html/js/main.js',
+  'client/html/js/patients.js',
+  'client/html/js/treatments.js'
 })

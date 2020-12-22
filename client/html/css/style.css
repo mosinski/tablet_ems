@@ -12,46 +12,16 @@ body, html {
   font-family:Saira,serif;
 }
 
-.right-color { 
-  position: absolute;
-  top: 0px;
-  left: 30px;
-  background: rgb(40, 40, 40);
-  height: 190px;
-  width: 500px;
-  border: 1px solid black;
-  border-radius: 10px 10px 10px 10px;
-  z-index:5;
-}
-
-.spacer {
-  height: 30%;
-}
-
-.spacer2 {
-  display: absolute;
-  top: -40px;
-  left: -150px;
-  width: 900px;
-  height:400px;
-  overflow-y: auto;
-  word-break: break-word;
-}
-
-table {
-  table-layout: fixed;
-}
-
 .btn-group {
   font-family:Saira,serif;
   background-image: url(../img/tablet.png);
   background-repeat: no-repeat;
   background-size: cover;
   position: absolute;
+  display: block;
   margin-left: 10%;
   margin-top: 5%;
   padding: 52px 92px;
-  display: none;
   color: white;
   height: 80%;
   width: 80%;
@@ -101,20 +71,19 @@ table {
   color: rgb(255, 0, 0);
 }
 
-#rootMenu .btn-lg {
-  border-width:  10px;
-}
-
-div.police_actions, div.inv, div.voice {
-  display: none;
-}
-
 .custom {
   width: 150px !important;
 }
 
 #treatmentForm {
-  background-color: #f2f2f2;
   font-family:Spectral,sans-serif;
   color: #000000;
+}
+
+#app {
+  background-color: #f2f2f2;
+  -webkit-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
+  min-height: calc(100% - 100px);
 }

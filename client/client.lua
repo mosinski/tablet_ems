@@ -32,7 +32,7 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job)
-	PlayerData.job = job
+  PlayerData.job = job
 end)
 
 RegisterNetEvent('tablet_ems:showTreatments')
@@ -46,9 +46,9 @@ end)
 Citizen.CreateThread(function()	
   while true do
     Citizen.Wait(1)
-    if PlayerData.job ~= nil and (PlayerData.job.name == 'fire' or PlayerData.job.name == 'offfire') then
+    if PlayerData.job ~= nil and (PlayerData.job.name == Config.Job.OnDuty or PlayerData.job.name == Config.Job.OffDuty) then
         if IsControlJustPressed(0, Keys["DELETE"]) then
-            if PlayerData.job.name == 'fire' then
+            if PlayerData.job.name == Config.Job.OnDuty then
                 if not PoliceGUI then
                     SetNuiFocus(true, true)
                     SendNUIMessage({type = 'open'})
@@ -72,13 +72,17 @@ end)
 
 RegisterNUICallback('NUIFocusOff', function()
   SetNuiFocus(false, false)
-  SendNUIMessage({type = 'close'})
   PoliceGUI = false
 end)
 
 RegisterNUICallback('getTreatments', function()
-  TriggerServerEvent("tablet_medyk:getTreatments");
+  TriggerServerEvent("tablet_ems:getTreatments");
 end)
+
+RegisterNUICallback('createTreatments', function(data)
+  TriggerServerEvent("tablet_ems:addTreatment", player, operations, fee, recovery);
+end)
+
 
 function fakturaPlayer(player, ilosc, powod)
   TriggerServerEvent("tablet_ems:SendMessage", player, ilosc, powod)

@@ -1,0 +1,23 @@
+{
+  "examinations": {
+    "list": "Badania",
+    "new": "Nowe<br>Badanie"
+  },
+  "treatments": {
+    "list": "Zabiegi",
+    "new": "Nowy<br>Zabieg"
+  },
+  "patients": {
+    "list": "Pacjenci",
+    "new": "Nowy Pacjent"
+  },
+  "medics": {
+    "list": "Lekarze",
+    "new": "Nowy Lekarz"
+  },
+  "deaths": {
+    "new": "Akt<br>Zgonu"
+  },
+  "close": "Zamknij",
+  "save": "Zapisz"
+}
