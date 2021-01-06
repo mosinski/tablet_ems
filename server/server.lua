@@ -127,6 +127,26 @@ AddEventHandler('tablet_ems:getTreatments', function()
   end
 end)
 
+RegisterNetEvent('tablet_ems:getPatients')
+AddEventHandler('tablet_ems:getPatients', function(query)
+  local results = MySQL.Sync.fetchAll("SELECT firstname, lastname, identifier, job, dateofbirth FROM users WHERE LOWER(firstname) LIKE LOWER('%" .. query .. "%') OR LOWER(lastname) LIKE LOWER('%" .. query .. "%') LIMIT 10")
+
+  if results ~= nil then
+    local wynik = {}
+
+	for k,v in pairs(results) do
+	  local data = {}
+	  data.name = results[k].firstname .. ' ' .. results[k].lastname
+	  data.identifier = results[k].identifier
+	  data.job = results[k].job
+	  data.dateofbirth = results[k].dateofbirth
+
+	  table.insert(wynik, data)
+    end
+
+	TriggerClientEvent('tablet_ems:autocompletePatients', source, wynik)
+  end
+end)
 
 function GetCharacterName(source)
 	local result = MySQL.Sync.fetchAll('SELECT * FROM users WHERE identifier = @identifier',{

@@ -4,6 +4,13 @@
 @import url(https://fonts.googleapis.com/css?family=Saira&display=swap);
 @import url(https://fonts.googleapis.com/css?family=Spectral&display=swap);
 
+@font-face{
+  font-family: "Ogardy Signature";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src:url(../fonts/OgardySignature-Trial.ttf);
+}
 
 body, html { 
   overflow-y: hidden;
@@ -75,10 +82,44 @@ body, html {
   width: 150px !important;
 }
 
+.form-group {
+  width: 100%;
+}
+
 #app {
   background-color: #f2f2f2;
   -webkit-transition: background-color 1000ms linear;
   -ms-transition: background-color 1000ms linear;
   transition: background-color 1000ms linear;
   min-height: calc(100% - 100px);
+}
+
+#signature-pad {
+  display: block;
+  position: relative;
+  border: 2px dashed gray; 
+  width: 100%;
+  font-family: "Ogardy Signature",serif;
+  font-size: 2em;
+}
+
+#signature {
+  -webkit-transition: opacity 3s ease-in-out;
+  -moz-transition: opacity 3s ease-in-out;
+  -ms-transition: opacity 3s ease-in-out;
+  -o-transition: opacity 3s ease-in-out;
+  transition: opacity 3s ease-in-out;
+  opacity: 0;
+}
+
+#signature:hover {
+  cursor: pointer;
+}
+
+#signature.signed {
+  opacity: 1;
+}
+
+#signature.signed:hover {
+  cursor: default;
 }

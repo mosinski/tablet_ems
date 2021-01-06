@@ -43,6 +43,14 @@ AddEventHandler('tablet_ems:showTreatments', function(data)
   });
 end)
 
+RegisterNetEvent('tablet_ems:autocompletePatients')
+AddEventHandler('tablet_ems:autocompletePatients', function(data)
+  SendNUIMessage({
+    type = 'autocompletePatients', 
+    patients = data
+  });
+end)
+
 Citizen.CreateThread(function()	
   while true do
     Citizen.Wait(1)
@@ -77,6 +85,14 @@ end)
 
 RegisterNUICallback("getTreatments", function()
   TriggerServerEvent("tablet_ems:getTreatments")
+end)
+
+RegisterNUICallback("sign", function()
+  TriggerServerEvent("InteractSound_SV:PlayWithinDistance", 3, "sign", 1.0)
+end)
+
+RegisterNUICallback("fillPatients", function(query)
+  TriggerServerEvent("tablet_ems:getPatients", query)
 end)
 
 RegisterNUICallback("createTreatment", function(data)
