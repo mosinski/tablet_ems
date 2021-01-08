@@ -66,6 +66,7 @@
   <script type="text/javascript">
     window.jQuery.get("locales/pl.json", function(data) {
       window.t = JSON.parse(data);
+      getPlayerName();
       showRootMenu();
     });
 
@@ -74,6 +75,9 @@
       	if(event.data.type == "open") {
       	  $('html, body').css('display', 'block')
       	}
+        if(event.data.type == "setPlayerName") {
+          window.player_name = event.data.name;
+        }
         if(event.data.type == "getTreatments") {
           getTreatments(event.data.treatments);
         }

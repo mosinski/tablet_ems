@@ -35,6 +35,14 @@ AddEventHandler('esx:setJob', function(job)
   PlayerData.job = job
 end)
 
+RegisterNetEvent('tablet_ems:setPlayerName')
+AddEventHandler('tablet_ems:setPlayerName', function(name)
+  SendNUIMessage({
+    type = 'setPlayerName', 
+    name = name
+  });
+end)
+
 RegisterNetEvent('tablet_ems:showTreatments')
 AddEventHandler('tablet_ems:showTreatments', function(data)
   SendNUIMessage({
@@ -95,10 +103,13 @@ RegisterNUICallback("fillPatients", function(query)
   TriggerServerEvent("tablet_ems:getPatients", query)
 end)
 
+RegisterNUICallback("getPlayerName", function()
+  TriggerServerEvent("tablet_ems:getPlayerName")
+end)
+
 RegisterNUICallback("createTreatment", function(data)
   TriggerServerEvent("tablet_ems:addTreatment", data['patient'], data['details'], data['price'], data['recovery'])
 end)
-
 
 function fakturaPlayer(player, ilosc, powod)
   TriggerServerEvent("tablet_ems:SendMessage", player, ilosc, powod)

@@ -37,3 +37,7 @@ function showRootMenu() {
   `
   document.getElementById('app').innerHTML = innerHTML;
 }
+
+function getPlayerName() {
+  $.post('http://tablet_ems/getPlayerName');
+}

@@ -100,7 +100,7 @@ function newTreatment() {
           <div class="form-group">
             <label for="price" class="col-form-label col-form-label-lg">Podpis</label>
             <div id="signature-pad" class="p-2" onclick="sign()">
-              <h1 id="signature">Dean Winchester</h1>
+              <h1 id="signature">${window.player_name}</h1>
             </div>
           </div>
         </div>
@@ -118,6 +118,7 @@ function newTreatment() {
 function createTreatment() {
   var data = window.jQuery('#treatmentForm').serializeArray().reduce((obj, item) => ({ ...obj, ...{ [item.name]: item.value } }), {});
   $.post('http://tablet_ems/createTreatment', JSON.stringify(data));
+  setTimeout(function(){ showTreatments() }, 1000);
 }
 
 function sign() {

@@ -10,64 +10,6 @@ TriggerEvent('esx_addonaccount:getSharedAccount', Config.Society, function(accou
     societyAccount = account
 end)
 
-RegisterNetEvent('tablet_ems:SendMessage')
-AddEventHandler('tablet_ems:SendMessage', function(target, fakturaAmount, fakturaReason)
-	local _source = source
-	local sourceXPlayer = ESX.GetPlayerFromId(_source)
-	local targetXPlayer = ESX.GetPlayerFromId(target)
-	local identifier = targetXPlayer.getIdentifier()
-	local policjant = GetCharacterName(_source)
-	local policee = policjant.." (".. sourceXPlayer.getName() ..")"
-	local name = GetCharacterName(target)
-	local imie = GetImie(target)
-	local nazwisko = GetNazwisko(target)
-	local faktura = tonumber(fakturaAmount)
-
-	if sourceXPlayer["job"]["name"] == "psycholog" then
-	  targetXPlayer.removeAccountMoney('bank', faktura)
-	  sourceXPlayer.addAccountMoney('bank', faktura / 2)
-      TriggerClientEvent('chatMessage', -1, _U('faktura'), { 147, 196, 109 }, _U('faktura_msg', name, faktura, fakturaReason,policee))
-	  societyAccount.addMoney(faktura)
-
-	  MySQL.Async.execute("INSERT INTO gracz_kartoteka (identifier,imie,nazwisko,policjant,powod,grzywna,ilosc_lat) VALUES (@identifier,@imie,@nazwisko,@policjant,@powod,@grzywna,@ilosc_lat)",
-			{
-			 ['@identifier'] = identifier,
-			 ['@imie'] = imie,
-			 ['@nazwisko'] = nazwisko,
-			 ['@policjant'] = policee,
-			 ['@grzywna'] = fakturaAmount,
-			 ['@ilosc_lat'] = "---",
-			 ['@powod'] = fakturaReason
-			})
-	else
-		DropPlayer(source, 'Co ty robisz: Lua Execution / Exploit Attempt')
-		print(('LOL: %s attempted to jail someone!'):format(xPlayer.identifier))
-		return
-	end
-end)
-
-RegisterNetEvent('tablet_ems:addKartoteka')
-AddEventHandler('tablet_ems:addKartoteka', function(player, jailTime, jailReason, jailGrzywna)
-	local _source = source
-	local sourceXPlayer = ESX.GetPlayerFromId(_source)
-	local targetXPlayer = ESX.GetPlayerFromId(player)
-	local identifier = targetXPlayer.getIdentifier()
-	local policjant = GetCharacterName(_source)
-	local policee = policjant.." (".. sourceXPlayer.getName() ..")"
-	local imie = GetImie(player)
-	local nazwisko = GetNazwisko(player)
-	MySQL.Async.execute("INSERT INTO gracz_kartoteka (identifier,imie,nazwisko,policjant,powod,grzywna,ilosc_lat) VALUES (@identifier,@imie,@nazwisko,@policjant,@powod,@grzywna,@ilosc_lat)",
-			{
-			 ['@identifier'] = identifier,
-			 ['@imie'] = imie,
-			 ['@nazwisko'] = nazwisko,
-			 ['@policjant'] = policee,
-			 ['@grzywna'] = jailGrzywna,
-			 ['@ilosc_lat'] = jailTime,
-			 ['@powod'] = jailReason
-			})
-end)
-
 ESX.RegisterServerCallback('tablet_ems:getKartoteka', function(source, cb)
 	local result = MySQL.Sync.fetchAll("SELECT imie,nazwisko,policjant,powod,grzywna,ilosc_lat,data FROM gracz_kartoteka ORDER BY data desc LIMIT 50")
 		if result ~= nil then
@@ -92,8 +34,8 @@ RegisterNetEvent('tablet_ems:addTreatment')
 AddEventHandler('tablet_ems:addTreatment', function(userIdentifier, details, price, recovery)
   local _source = source
   local sourceXPlayer = ESX.GetPlayerFromId(_source)
+  local userPlayer = ESX.GetPlayerFromId(userIdentifier)
   local medicIdentifier = sourceXPlayer.getIdentifier()
-  --local recoveryDate = os.date('%Y-%m-%d %H:%M:%S', os.time() + 10 * 60)
 
   MySQL.Async.execute('INSERT INTO `ems_user_treatments` (`userId`, `medicId`, `operations`, `fee`, `recoveryDate`) VALUES (@userId, @medicId, @operations, @fee, @recoveryDate)',{
     ['@userId'] = userIdentifier,
@@ -101,7 +43,13 @@ AddEventHandler('tablet_ems:addTreatment', function(userIdentifier, details, pri
     ['@operations'] = details,
     ['@fee'] = price,
 	['@recoveryDate'] = recovery
-  })
+  },
+    function()
+	  userPlayer.removeBank(price);
+	  societyAccount.addMoney(price);
+	  TriggerServerEvent("route68:hospitalPlayer", userIdentifier, recovery - os.time());
+	end
+  );
 end)
 
 RegisterNetEvent('tablet_ems:getTreatments')
@@ -145,6 +93,21 @@ AddEventHandler('tablet_ems:getPatients', function(query)
     end
 
 	TriggerClientEvent('tablet_ems:autocompletePatients', source, wynik)
+  end
+end)
+
+RegisterNetEvent('tablet_ems:getPlayerName')
+AddEventHandler('tablet_ems:getPlayerName', function()
+  local xPlayer = ESX.GetPlayerFromId(source)
+  local identifier = xPlayer.getIdentifier()
+  local results = MySQL.Sync.fetchAll("SELECT firstname, lastname FROM users WHERE identifier = @identifier LIMIT 1", {
+    ['@identifier'] = identifier
+  })
+
+  if results ~= nil then
+    local wynik = results[1].firstname .. ' ' .. results[1].lastname
+
+	TriggerClientEvent('tablet_ems:setPlayerName', source, wynik)
   end
 end)
 
