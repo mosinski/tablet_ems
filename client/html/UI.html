@@ -56,8 +56,8 @@
       </div>
     </div>
     <script src=nui://game/ui/jquery.js></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src=js/popper.min.js></script>
+    <script src=js/bootstrap.min.js></script>
     <script src=js/nav.js></script>
     <script src=js/main.js></script>
     <script src=js/patients.js></script>
@@ -66,7 +66,6 @@
   <script type="text/javascript">
     window.jQuery.get("locales/pl.json", function(data) {
       window.t = JSON.parse(data);
-      getPlayerName();
       showRootMenu();
     });
 
@@ -77,12 +76,16 @@
       	}
         if(event.data.type == "setPlayerName") {
           window.player_name = event.data.name;
+          sign();
         }
         if(event.data.type == "getTreatments") {
           getTreatments(event.data.treatments);
         }
         if(event.data.type == "autocompletePatients") {
           autocompletePatients(event.data.patients);
+        }
+        if (event.data.type == "closestPlayer") {
+          selectPatient(event.data.id, event.data.name);
         }
       });
     });

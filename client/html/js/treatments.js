@@ -56,7 +56,7 @@ function newTreatment() {
             <label for="patient" class="col-form-label col-form-label-lg">Pacjent</label>
             <div class="input-group">
               <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary" type="button">
+                <button class="btn btn-outline-secondary" type="button" onclick="getClosestPatient()">
                   <i class="fas fa-podcast"></i>
                 </button>
               </div>
@@ -64,10 +64,6 @@ function newTreatment() {
               <input type="text" class="form-control form-control-lg" id="patientTrigger" placeholder="Imie i Nazwisko" required>
             </div>
             <div class="dropdown-menu show" id="patientList">
-              <button type="button" class="dropdown-item" data-value="7">
-                You can use this example to
-                <span class="text-danger">test</span>
-              </button>
             </div>
           </div>
         </div>
@@ -99,8 +95,8 @@ function newTreatment() {
         <div class="row">
           <div class="form-group">
             <label for="price" class="col-form-label col-form-label-lg">Podpis</label>
-            <div id="signature-pad" class="p-2" onclick="sign()">
-              <h1 id="signature">${window.player_name}</h1>
+            <div id="signature-pad" class="p-3" onclick="sign()">
+              <h1 id="signature" class="p-0 m-0">${window.player_name}</h1>
             </div>
           </div>
         </div>
@@ -120,13 +116,3 @@ function createTreatment() {
   $.post('http://tablet_ems/createTreatment', JSON.stringify(data));
   setTimeout(function(){ showTreatments() }, 1000);
 }
-
-function sign() {
-  var element = document.getElementById("signature");
-  var name = "signed";
-  var arr = element.className.split(" ");
-  if (arr.indexOf(name) == -1) {
-    $.post('http://tablet_ems/sign');
-    element.classList.add(name);
-  }
-} 

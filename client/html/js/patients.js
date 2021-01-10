@@ -1,7 +1,9 @@
 function closePatientList() {
   var element = document.getElementById("patientList");
-  element.innerHTML = "";
-  element.classList.remove("show");
+  if (element) {
+    element.innerHTML = "";
+    element.classList.remove("show");
+  }
 }
 
 function selectPatient(id, name) {
@@ -44,4 +46,8 @@ function autocomplete(inp, arr) {
   document.addEventListener("click", function (e) {
     closePatientList();
   });
+}
+
+function getClosestPatient() {
+  $.post('http://tablet_ems/getClosestPlayer');
 }

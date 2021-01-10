@@ -12,7 +12,7 @@
   src:url(../fonts/OgardySignature-Trial.ttf);
 }
 
-body, html { 
+body, html {
   overflow-y: hidden;
   background-color: transparent !important;
   display: none;
@@ -50,6 +50,12 @@ body, html {
 
 .navbar button {
   margin-top: -30px;
+}
+
+.navbar button:focus,
+.navbar button:visited {
+  background-color: #6c757d;
+  color: #fff;
 }
 
 .navbar-brand {
@@ -92,6 +98,8 @@ body, html {
   -ms-transition: background-color 1000ms linear;
   transition: background-color 1000ms linear;
   min-height: calc(100% - 100px);
+  max-height: calc(100% - 100px);
+  overflow-y: auto;
 }
 
 #signature-pad {

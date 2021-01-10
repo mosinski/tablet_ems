@@ -41,3 +41,18 @@ function showRootMenu() {
 function getPlayerName() {
   $.post('http://tablet_ems/getPlayerName');
 }
+
+function sign() {
+  if (typeof window.player_name !== "undefined") {
+    var element = document.getElementById("signature");
+    var name = "signed";
+    var arr = element.className.split(" ");
+    if (arr.indexOf(name) == -1) {
+      element.innerHTML = window.player_name;
+      $.post('http://tablet_ems/sign');
+      element.classList.add(name);
+    }
+  } else {
+    getPlayerName(); 
+  }
+} 

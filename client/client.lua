@@ -13,6 +13,10 @@ local Keys = {
 local PoliceGUI   = false
 local PlayerData  = {}
 local CurrentTask = {}
+local tabletEntity = nil
+local tabletModel = "prop_cs_tablet"
+local tabletDict = "amb@world_human_seat_wall_tablet@female@base"
+local tabletAnim = "base"
 
 ESX = nil
 Citizen.CreateThread(function()
@@ -36,10 +40,10 @@ AddEventHandler('esx:setJob', function(job)
 end)
 
 RegisterNetEvent('tablet_ems:setPlayerName')
-AddEventHandler('tablet_ems:setPlayerName', function(name)
+AddEventHandler('tablet_ems:setPlayerName', function(data)
   SendNUIMessage({
     type = 'setPlayerName', 
-    name = name
+    name = data
   });
 end)
 
@@ -56,6 +60,15 @@ AddEventHandler('tablet_ems:autocompletePatients', function(data)
   SendNUIMessage({
     type = 'autocompletePatients', 
     patients = data
+  });
+end)
+
+RegisterNetEvent('tablet_ems:setClosestPlayer')
+AddEventHandler('tablet_ems:setClosestPlayer', function(id, name)
+  SendNUIMessage({
+	type = 'closestPlayer',
+	id = id,
+	name = name
   });
 end)
 
@@ -111,7 +124,47 @@ RegisterNUICallback("createTreatment", function(data)
   TriggerServerEvent("tablet_ems:addTreatment", data['patient'], data['details'], data['price'], data['recovery'])
 end)
 
+RegisterNUICallback("getClosestPlayer", function()
+  local closestPlayer, closestDistance = ESX.Game.GetClosestPlayer()
+  if closestPlayer == -1 or closestDistance > 3.0 then
+	TriggerEvent("pNotify:SendNotification", {text = _U('no_players')})
+	return
+  else
+    TriggerServerEvent("tablet_ems:getClosestPlayer", closestPlayer.identifier)
+  end
+end)
+
 function fakturaPlayer(player, ilosc, powod)
   TriggerServerEvent("tablet_ems:SendMessage", player, ilosc, powod)
 end
 
+function startTabletAnimation()
+  Citizen.CreateThread(function()
+	RequestAnimDict(tabletDict)
+	while not HasAnimDictLoaded(tabletDict) do
+	  Citizen.Wait(0)
+	end
+	attachObject()
+	TaskPlayAnim(GetPlayerPed(-1), tabletDict, tabletAnim, 8.0, -8.0, -1, 50, 0, false, false, false)
+  end)
+end
+
+function attachObject()
+  if tabletEntity == nil then
+    Citizen.Wait(380)
+	RequestModel(tabletModel)
+	while not HasModelLoaded(tabletModel) do
+	  Citizen.Wait(1)
+	end
+	tabletEntity = CreateObject(GetHashKey(tabletModel), 1.0, 1.0, 1.0, 1, 1, 0)
+	AttachEntityToEntity(tabletEntity, GetPlayerPed(-1), GetPedBoneIndex(GetPlayerPed(-1), 57005), 0.12, 0.10, -0.13, 25.0, 170.0, 160.0, true, true, false, true, 1, true)
+  end
+end
+
+function stopTabletAnimation()
+  if tabletEntity ~= nil then
+	StopAnimTask(GetPlayerPed(-1), tabletDict, tabletAnim ,8.0, -8.0, -1, 50, 0, false, false, false)
+	DeleteEntity(tabletEntity)
+	tabletEntity = nil
+  end
+end

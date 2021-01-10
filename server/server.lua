@@ -105,9 +105,22 @@ AddEventHandler('tablet_ems:getPlayerName', function()
   })
 
   if results ~= nil then
-    local wynik = results[1].firstname .. ' ' .. results[1].lastname
+    local name = results[1].firstname .. ' ' .. results[1].lastname
 
-	TriggerClientEvent('tablet_ems:setPlayerName', source, wynik)
+	TriggerClientEvent('tablet_ems:setPlayerName', source, name)
+  end
+end)
+
+RegisterNetEvent('tablet_ems:getClosestPlayer')
+AddEventHandler('tablet_ems:getClosestPlayer', function(identifier)
+  local results = MySQL.Sync.fetchAll("SELECT firstname, lastname FROM users WHERE identifier = @identifier LIMIT 1", {
+    ['@identifier'] = identifier
+  })
+
+  if results ~= nil then
+    local name = results[1].firstname .. ' ' .. results[1].lastname
+
+	TriggerClientEvent('tablet_ems:setPlayerName', source, identifier, name)
   end
 end)
 
